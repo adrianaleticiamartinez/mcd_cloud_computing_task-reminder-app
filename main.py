@@ -7,7 +7,7 @@ db = firestore.Client()
 
 @app.route('/')
 def index():
-    return "Welcome to Task Reminder App!"
+    return "Bienvenido al proyecto Task Reminder"
 
 @app.route('/tasks', methods=['POST'])
 def create_task():
