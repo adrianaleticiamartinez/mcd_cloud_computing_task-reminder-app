@@ -1,13 +1,11 @@
-import json
 from google.cloud import firestore
+from google.cloud import pubsub_v1
+import datetime
 
-def send_reminder(request):
+def send_reminders(event, context):
     db = firestore.Client()
-    users_ref = db.collection('users')
-    users = users_ref.stream()
-
-    reminders = []
-    for user in users:
-        reminders.append(f"Send reminder to {user.id}")
-    
-    return json.dumps(reminders)
+    tasks_ref = db.collection('tasks').where('reminder_time', '<=', datetime.datetime.now()).stream()
+    for task in tasks_ref:
+        task_data = task.to_dict()
+        # Enviar notificación o reminder 
+        print(f"Recordatorio para tarea: {task_data['title']}")
