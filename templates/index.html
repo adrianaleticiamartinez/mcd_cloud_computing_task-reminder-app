@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Tareas y Recordatorios - ALME</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Task Reminder App</h1>
+        <form id="task-form">
+            <input type="text" id="task-title" placeholder="Titulo de la tarea" required>
+            <input type="datetime-local" id="reminder-time" required>
+            <button type="submit">Añadir Tarea</button>
+        </form>
+
+        <h2>Tareas</h2>
+        <ul id="task-list"></ul>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
