@@ -5,6 +5,7 @@ const taskList = document.getElementById('task-list');
 // Event listener para agregar una tarea
 taskForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log("boton"); 
 
     const title = document.getElementById('task-title').value;
     const reminderTime = document.getElementById('reminder-time').value;
@@ -26,6 +27,7 @@ taskForm.addEventListener('submit', async (e) => {
     }
 
     // Hacemos una solicitud POST al backend para agregar una tarea
+    console.log("antes de mandar"); 
     const response = await fetch('/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
