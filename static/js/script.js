@@ -13,10 +13,6 @@ taskForm.addEventListener('submit', async (e) => {
 
     // Validar que el email sea válido usando una expresión regular
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-        alert("El correo electrónico no es válido");
-        return;
-    }
 
     // Validar que la fecha del recordatorio sea mayor a la fecha actual
     const currentDateTime = new Date();
