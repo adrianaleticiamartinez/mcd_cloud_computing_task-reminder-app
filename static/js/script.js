@@ -39,7 +39,7 @@ async function deleteTask(taskId) {
 
 // Evento submit del formulario para crear una nueva tarea
 document.getElementById("taskForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
+    event.preventDefault();  // Evita que el formulario se envíe de la manera predeterminada.
 
     const title = document.getElementById("title").value;
     const reminder_time = document.getElementById("reminder_time").value;
