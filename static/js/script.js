@@ -21,10 +21,6 @@ taskForm.addEventListener('submit', async (e) => {
     // Validar que la fecha del recordatorio sea mayor a la fecha actual
     const currentDateTime = new Date();
     const reminderDateTime = new Date(reminderTime);
-    if (reminderDateTime <= currentDateTime) {
-        alert("La fecha de recordatorio debe ser mayor a la fecha actual");
-        return;
-    }
 
     // Hacemos una solicitud POST al backend para agregar una tarea
     console.log("antes de mandar"); 
