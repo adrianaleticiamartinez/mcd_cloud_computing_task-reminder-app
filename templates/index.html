@@ -9,8 +9,6 @@
 <body>
     <div class="container">
         <h1>Task Reminder App</h1>
-
-        <!-- Formulario para añadir una tarea -->
         <form id="taskForm">
             <div class="form-group">
                 <label for="title">Tarea a recordar:</label>
@@ -24,21 +22,14 @@
                 <label for="email">Correo electrónico:</label>
                 <input type="email" id="email" name="email" required>
             </div>
-            <div id="timeError" class="error" style="display: none;">La fecha de recordatorio debe ser mayor a la fecha actual</div>
-            <div id="emailError" class="error" style="display: none;">El correo electrónico no es válido</div>
             <button type="submit">Añadir tarea</button>
         </form>
 
-        <!-- Mensajes de éxito o error -->
-        <div id="message" class="message" style="display: none;"></div>
+        <div id="message" style="display: none;"></div>
 
-        <!-- Lista de tareas -->
         <h2>Lista de tareas</h2>
         <ul id="taskList"></ul>
     </div>
-    
     <script src="/static/js/script.js"></script>
 </body>
 </html>
-
-
