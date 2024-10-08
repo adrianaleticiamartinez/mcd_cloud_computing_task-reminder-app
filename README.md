@@ -30,7 +30,7 @@ La aplicación está construida con los siguientes componentes de GCP:
 ## Estructura del Proyecto
 
 ```
-task-reminder-app/
+mcd_cloud_computing_task-reminder-app/
 │
 ├─── main.py                # Código del backend con Flask
 ├─── app.yaml               # Configuración de App Engine para el despliegue
@@ -55,8 +55,8 @@ task-reminder-app/
 1. **Clona el repositorio:**
 
    ```bash
-   git clone https://github.com/usuario/task-reminder-app.git
-   cd task-reminder-app
+   git clone https://github.com/adrianaleticiamartinez/mcd_cloud_computing_task-reminder-app.git
+   cd mcd_cloud_computing_task-reminder-app
    ```
 
 2. **Configura un entorno virtual e instala las dependencias:**
@@ -112,7 +112,7 @@ task-reminder-app/
 ## Uso
 
 1. **Acceder a la aplicación:**
-   Una vez desplegada, puedes acceder a la URL de App Engine que se te proporcionará al finalizar el despliegue (`https://your-app-id.appspot.com`).
+   Una vez desplegada, puedes acceder a la URL de App Engine que se te proporcionará al finalizar el despliegue
 
 2. **Crear tareas:**
    - Ingresa un título, la fecha y hora del recordatorio, y el correo electrónico.
