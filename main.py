@@ -14,13 +14,21 @@ def index():
 def create_task():
     """Endpoint para crear una nueva tarea"""
     task_data = request.json
+    
+    # Validamos que el email esté presente
+    if 'email' not in task_data or not task_data['email']:
+        return jsonify({"error": "Email is required"}), 400
+
     task_data['created_at'] = datetime.datetime.utcnow()  # Guardamos la fecha de creación en UTC
+    
     # Convertir la fecha de recordatorio del formato ISO a UTC
-    # task_data['reminder_time'] = datetime.datetime.fromisoformat(task_data['reminder_time']).astimezone(datetime.timezone.utc)
-    task_data['reminder_time'] = datetime.datetime.strptime(task_data['reminder_time'] , '%Y-%m-%dT%H:%M') + datetime.timedelta(hours=6)
+    try:
+        task_data['reminder_time'] = datetime.datetime.strptime(task_data['reminder_time'] , '%Y-%m-%dT%H:%M') + datetime.timedelta(hours=6)
+    except ValueError:
+        return jsonify({"error": "Invalid reminder time format"}), 400
+
     task_ref = db.collection('tasks').add(task_data)
     return jsonify({"success": True, "task_id": task_ref[1].id}), 201
-
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
