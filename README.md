@@ -50,6 +50,51 @@ mcd_cloud_computing_task-reminder-app/
 │   └─── requirements.txt            # Dependencias necesarias para la función
 ```
 
+## Detalle del Código
+
+### Backend - `main.py`
+
+Este archivo maneja la lógica principal del backend, implementado con Flask:
+
+- **Flask** es el framework que gestiona las rutas y el servidor.
+- **Firestore** se utiliza como la base de datos para almacenar las tareas.
+  
+1. **Rutas principales:**
+
+   - `/`: Carga la página principal con el frontend (HTML).
+   - `/tasks` (POST): Crea una nueva tarea con título, hora de recordatorio y correo electrónico.
+   - `/tasks` (GET): Lista todas las tareas almacenadas en Firestore.
+   - `/tasks/<task_id>` (DELETE): Elimina una tarea por su ID.
+
+2. **Validaciones clave:**
+
+   - El servidor valida que el campo `email` sea proporcionado.
+   - El formato de la hora de recordatorio se transforma a UTC, y se valida que esté correctamente formateado.
+
+### Frontend - `static/js/script.js`
+
+Este archivo contiene la lógica del frontend en JavaScript, incluyendo la interacción con el servidor a través de peticiones **fetch**.
+
+1. **Cargar tareas:** Llama a la API para obtener todas las tareas y las muestra en la página.
+2. **Crear una nueva tarea:** Envía una petición POST al servidor para crear una tarea, validando el correo y la fecha antes de enviarla.
+3. **Eliminar una tarea:** Envía una petición DELETE al servidor para eliminar la tarea seleccionada.
+
+
+### Cloud Functions - `cloud-functions-reminders/main.py`
+
+Esta función se ejecuta en segundo plano y verifica las tareas que están por vencerse. Si una tarea está próxima a su hora de recordatorio, se envía un correo electrónico utilizando la API de Gmail.
+
+1. **Firestore:** Consulta las tareas con `reminder_time` menor o igual al tiempo actual.
+2. **Gmail API:** Envía un correo de recordatorio utilizando las credenciales de OAuth.
+
+
+
+### Estilos y Estructura del Frontend
+
+- **index.html**: Estructura HTML de la página principal.
+- **styles.css**: Define los estilos de la aplicación, mejorando la presentación de la lista de tareas y el formulario.
+- **script.js**: Interactúa con el backend para cargar y gestionar las tareas.
+
 ## Instalación Local
 
 1. **Clona el repositorio:**
@@ -130,3 +175,4 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 3. Haz tus **cambios** y realiza un **commit** (`git commit -m 'Añadir nueva característica'`).
 4. Haz un **push** a la rama (`git push origin feature/nueva-caracteristica`).
 5. Abre un **pull request**.
+
