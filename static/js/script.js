@@ -1,75 +1,108 @@
-// Obtenemos los elementos del DOM
-const taskForm = document.getElementById('task-form');
-const taskList = document.getElementById('task-list');
+// Cargar las tareas desde el backend
+async function loadTasks() {
+    const response = await fetch("/tasks");
+    const tasks = await response.json();
 
-// Event listener para agregar una tarea
-taskForm.addEventListener('submit', async (e) => {
-    e.preventDefault();  // Evita que el formulario se envíe como GET
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";  // Limpiar la lista antes de agregar nuevas tareas
 
-    const title = document.getElementById('task-title').value;
-    const reminderTime = document.getElementById('reminder-time').value;
-    const email = document.getElementById('email').value;
+    tasks.forEach(task => {
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `
+            <span>${task.title} - Recordatorio: ${new Date(task.reminder_time).toLocaleString()} - Email: ${task.email}</span>
+            <button class="delete-button">Eliminar</button>
+        `;
+
+        // Botón para eliminar tarea
+        const deleteButton = listItem.querySelector(".delete-button");
+        deleteButton.onclick = async function() {
+            await deleteTask(task.id);
+            loadTasks();  // Volver a cargar la lista después de eliminar
+        };
+
+        taskList.appendChild(listItem);
+    });
+}
+
+// Eliminar una tarea por su ID
+async function deleteTask(taskId) {
+    const response = await fetch(`/tasks/${taskId}`, {
+        method: "DELETE"
+    });
+    
+    if (response.ok) {
+        showMessage("Tarea eliminada correctamente", "success");
+    } else {
+        showMessage("Error al eliminar la tarea", "error");
+    }
+}
+
+// Evento submit del formulario para crear una nueva tarea
+document.getElementById("taskForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const title = document.getElementById("title").value;
+    const reminder_time = document.getElementById("reminder_time").value;
+    const email = document.getElementById("email").value;
+
+    // Ocultar errores previos
+    clearMessages();
+
+    // Validar que la fecha del recordatorio sea mayor a la fecha actual
+    const currentDateTime = new Date();
+    const reminderDateTime = new Date(reminder_time);
+
+    if (reminderDateTime <= currentDateTime) {
+        showMessage("La fecha de recordatorio debe ser mayor a la fecha actual", "error");
+        return;
+    }
 
     // Validar que el email sea válido usando una expresión regular
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-        alert("El correo electrónico no es válido");
+        showMessage("El correo electrónico no es válido", "error");
         return;
     }
 
-    // Validar que la fecha del recordatorio sea mayor a la fecha actual
-    const currentDateTime = new Date();
-    const reminderDateTime = new Date(reminderTime);
-    if (reminderDateTime <= currentDateTime) {
-        alert("La fecha de recordatorio debe ser mayor a la fecha actual");
-        return;
-    }
-
-    // Hacemos una solicitud POST al backend para agregar una tarea
-    const response = await fetch('/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            title, 
-            reminder_time: reminderTime,
-            email 
+    // Si todas las validaciones pasan, procede a crear la tarea
+    const response = await fetch("/tasks", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title: title,
+            reminder_time: reminder_time,
+            email: email
         })
     });
 
-    const result = await response.json();
-
-    if (result.success) {
-        loadTasks(); // Recargamos las tareas después de agregar una
-        taskForm.reset(); // Limpiamos el formulario
+    if (response.ok) {
+        showMessage("Tarea creada correctamente", "success");
+        document.getElementById("taskForm").reset();
+        loadTasks();  // Vuelve a cargar las tareas después de crear una nueva
     } else {
-        alert("Error al agregar la tarea");
+        showMessage("Error al crear la tarea", "error");
     }
 });
 
-// Función para obtener y mostrar las tareas
-async function loadTasks() {
-    const response = await fetch('/tasks');
-    const tasks = await response.json();
-
-    taskList.innerHTML = ''; // Limpiamos la lista de tareas
-
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <span>${task.title} - ${new Date(task.reminder_time).toLocaleString()} - ${task.email}</span>
-            <button onclick="deleteTask('${task.id}')">Borrar</button>
-        `;
-        taskList.appendChild(li);
-    });
+// Función para mostrar mensajes de éxito o error
+function showMessage(message, type) {
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = message;
+    messageDiv.className = type; // Aplica clases CSS para estilo según el tipo de mensaje ('success' o 'error')
+    messageDiv.style.display = "block";  // Mostrar mensaje
 }
 
-// Función para eliminar una tarea
-async function deleteTask(taskId) {
-    await fetch(`/tasks/${taskId}`, {
-        method: 'DELETE'
-    });
-    loadTasks(); // Recargamos las tareas después de eliminar una
+// Función para limpiar mensajes
+function clearMessages() {
+    const messageDiv = document.getElementById("message");
+    messageDiv.style.display = "none";
+    messageDiv.textContent = "";
 }
+
+// Cargar las tareas al cargar la página
+loadTasks();
 
 // Cargar las tareas cuando se carga la página
 window.onload = loadTasks;
