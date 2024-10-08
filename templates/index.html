@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicación de Tareas y Recordatorios - ALME</title>
+    <title>Recordatorio de Tareas</title>
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Task Reminder App</h1>
-        <form id="task-form">
-            <input type="text" id="task-title" placeholder="Titulo de la tarea" required>
-            <input type="datetime-local" id="reminder-time" required>
-            <button type="submit">Añadir Tarea</button>
-        </form>
+    <h1>Recordatorio de Tareas</h1>
+    <form id="taskForm">
+        <label for="title">Título:</label>
+        <input type="text" id="title" name="title" required>
 
-        <h2>Tareas</h2>
-        <ul id="task-list"></ul>
-    </div>
+        <label for="reminder_time">Hora del recordatorio:</label>
+        <input type="datetime-local" id="reminder_time" name="reminder_time" required>
+        <span id="timeError" style="color:red; display:none;">La fecha y hora del recordatorio deben ser mayores a la fecha y hora actual.</span>
+
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required>
+        <span id="emailError" style="color:red; display:none;">Por favor, introduce una dirección de correo electrónico válida.</span>
+
+        <button type="submit">Crear Tarea</button>
+    </form>
+
+    <h2>Tareas</h2>
+    <ul id="taskList"></ul>
 
     <script src="/static/js/script.js"></script>
 </body>
