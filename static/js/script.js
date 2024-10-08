@@ -1,7 +1,6 @@
-// Asegúrate de que el DOM esté completamente cargado
-document.addEventListener("DOMContentLoaded", function() {
-    // Cargar las tareas desde el backend
-    async function loadTasks() {
+// Función para cargar las tareas desde el backend
+async function loadTasks() {
+    try {
         const response = await fetch("/tasks");
         const tasks = await response.json();
 
@@ -24,10 +23,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
             taskList.appendChild(listItem);
         });
+    } catch (error) {
+        console.error("Error al cargar las tareas:", error);
+        showMessage("Error al cargar las tareas", "error");
     }
+}
 
-    // Eliminar una tarea por su ID
-    async function deleteTask(taskId) {
+// Función para eliminar una tarea por su ID
+async function deleteTask(taskId) {
+    try {
         const response = await fetch(`/tasks/${taskId}`, {
             method: "DELETE"
         });
@@ -37,11 +41,18 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             showMessage("Error al eliminar la tarea", "error");
         }
+    } catch (error) {
+        console.error("Error al eliminar la tarea:", error);
+        showMessage("Error al eliminar la tarea", "error");
     }
+}
 
-    // Evento submit del formulario para crear una nueva tarea
-    document.getElementById("taskForm").addEventListener("submit", async function(event) {
-        event.preventDefault();  // Evita que el formulario se envíe de la manera predeterminada.
+// Evento submit del formulario para crear una nueva tarea
+document.addEventListener("DOMContentLoaded", function() {
+    const taskForm = document.getElementById("taskForm");
+
+    taskForm.addEventListener("submit", async function(event) {
+        event.preventDefault();  // Evita que la página se recargue al enviar el formulario
 
         const title = document.getElementById("title").value;
         const reminder_time = document.getElementById("reminder_time").value;
@@ -67,42 +78,52 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Si todas las validaciones pasan, procede a crear la tarea
-        const response = await fetch("/tasks", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: title,
-                reminder_time: reminder_time,
-                email: email
-            })
-        });
+        try {
+            const response = await fetch("/tasks", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: title,
+                    reminder_time: reminder_time,
+                    email: email
+                })
+            });
 
-        if (response.ok) {
-            showMessage("Tarea creada correctamente", "success");
-            document.getElementById("taskForm").reset();
-            loadTasks();  // Vuelve a cargar las tareas después de crear una nueva
-        } else {
+            if (response.ok) {
+                showMessage("Tarea creada correctamente", "success");
+                taskForm.reset();
+                loadTasks();  // Vuelve a cargar las tareas después de crear una nueva
+            } else {
+                const errorData = await response.json();
+                showMessage(`Error: ${errorData.error}`, "error");
+            }
+        } catch (error) {
+            console.error("Error al crear la tarea:", error);
             showMessage("Error al crear la tarea", "error");
         }
     });
 
-    // Función para mostrar mensajes de éxito o error
-    function showMessage(message, type) {
-        const messageDiv = document.getElementById("message");
-        messageDiv.textContent = message;
-        messageDiv.className = type; // Aplica clases CSS para estilo según el tipo de mensaje ('success' o 'error')
-        messageDiv.style.display = "block";  // Mostrar mensaje
-    }
-
-    // Función para limpiar mensajes
-    function clearMessages() {
-        const messageDiv = document.getElementById("message");
-        messageDiv.style.display = "none";
-        messageDiv.textContent = "";
-    }
-
-    // Cargar las tareas al cargar la página
+    // Cargar las tareas cuando se carga la página
     loadTasks();
 });
+
+// Función para mostrar mensajes de éxito o error
+function showMessage(message, type) {
+    const messageDiv = document.getElementById("message");
+    messageDiv.textContent = message;
+    messageDiv.className = type; // Aplica clases CSS para estilo según el tipo de mensaje ('success' o 'error')
+    messageDiv.style.display = "block";  // Mostrar mensaje
+}
+
+// Función para limpiar mensajes
+function clearMessages() {
+    const messageDiv = document.getElementById("message");
+    messageDiv.style.display = "none";
+    messageDiv.textContent = "";
+}
+
+// Cargar las tareas cuando se carga la página
+window.onload = loadTasks;
+
