@@ -4,8 +4,7 @@ const taskList = document.getElementById('task-list');
 
 // Event listener para agregar una tarea
 taskForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    console.log("boton"); 
+    e.preventDefault();  // Evita que el formulario se envíe como GET
 
     const title = document.getElementById('task-title').value;
     const reminderTime = document.getElementById('reminder-time').value;
@@ -13,13 +12,20 @@ taskForm.addEventListener('submit', async (e) => {
 
     // Validar que el email sea válido usando una expresión regular
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        alert("El correo electrónico no es válido");
+        return;
+    }
 
     // Validar que la fecha del recordatorio sea mayor a la fecha actual
     const currentDateTime = new Date();
     const reminderDateTime = new Date(reminderTime);
+    if (reminderDateTime <= currentDateTime) {
+        alert("La fecha de recordatorio debe ser mayor a la fecha actual");
+        return;
+    }
 
     // Hacemos una solicitud POST al backend para agregar una tarea
-    console.log("antes de mandar"); 
     const response = await fetch('/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,5 +73,4 @@ async function deleteTask(taskId) {
 
 // Cargar las tareas cuando se carga la página
 window.onload = loadTasks;
-
 
