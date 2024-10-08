@@ -1,3 +1,8 @@
 google-cloud-firestore==2.7.0
 google-cloud-pubsub
 functions-framework==3.*
+google-api-python-client
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+email
