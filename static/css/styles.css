@@ -97,3 +97,22 @@ ul li button:hover {
     background-color: #c9302c;
 }
 
+.message {
+    padding: 10px;
+    margin: 15px 0;
+    display: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.message.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.message.error {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+
